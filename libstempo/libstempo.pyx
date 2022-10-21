@@ -1685,7 +1685,7 @@ cdef class tempopulsar:
         formResiduals(self.psr,self.npsr,1 if removemean else 0)
 
     def get_obsCoord(self):
-        return get_obsCoord(self.psr,self.npsr)
+        get_obsCoord(self.psr,self.npsr)
         
 
     # TO DO: proper dimensionfy as a table
