@@ -1231,16 +1231,13 @@ cdef class tempopulsar:
             
             return obs_coord
 
-        def __set__(self, telname, x, y, z):
-            tels = numpy.sort(numpy.unique(self.telescope()))
-            # if telname in tels:
-            #     obs = getObservatory(telname)
-            #     #stdio.sprintf(obs.x,"%s",<char *>value_bytes)
-            #     obs.x = x
-            #     obs.y = y
-            #     obs.z = z
-            # else:
-            #     raise ValueError("Telescope name '{}' not found.".format(telname))
+        def __set__(self,value):
+            value_bytes = value.encode()
+
+            if len(value_bytes) < 16:
+                stdio.sprintf(self.psr[0].clock,"%s",<char *>value_bytes)
+            else:
+                raise ValueError("CLK name '{}' is too long.".format(value))
 
 
     excludepars = ['START','FINISH']
