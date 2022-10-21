@@ -209,6 +209,9 @@ cdef extern from "tempo2.h":
 
     ctypedef struct observatory:
         double height_grs80     # GRS80 geodetic height
+        double x
+        double y
+        double z
 
     ctypedef struct pulsar:
         parameter param[MAX_PARAMS]
@@ -721,6 +724,9 @@ cdef class tempopulsar:
         formBatsAll(self.psr,self.npsr)
 
         get_obsCoord(self.psr,self.npsr)
+        self.obs.x = obs.x
+        self.obs.y = obs.y
+        self.obs.z = obs.z
 
         # create parameter proxies
 
