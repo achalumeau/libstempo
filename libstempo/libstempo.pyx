@@ -310,7 +310,6 @@ cdef extern from "tempo2.h":
     void formBatsAll(pulsar *psr,int npsr)
     void updateBatsAll(pulsar *psr,int npsr)                    # what's the difference?
     void formResiduals(pulsar *psr,int npsr,int removeMean)
-    void get_obsCoord(pulsar *psr,int npsr)
 
     # void doFit(pulsar *psr,int npsr,int writeModel) --- obsoleted
     # void doFitAll(pulsar *psr,int npsr, const char *covarFuncFile) --- obsoleted
@@ -723,8 +722,6 @@ cdef class tempopulsar:
         preProcess(self.psr,self.npsr,0,NULL)
         formBatsAll(self.psr,self.npsr)
 
-        #get_obsCoord(self.psr,self.npsr)
-
         # create parameter proxies
 
         self.units = units
@@ -736,32 +733,6 @@ cdef class tempopulsar:
         # do a fit if requested
         if dofit:
             self.fit()
-
-
-    def get_obsCoordinates(self):
-
-        cdef double [:] _posP = <double [:3]>self.psr[0].posPulsar
-        cdef double [:] _zenith = <double [:3]>self.psr[0].obsn[0].zenith
-
-        _posP.strides[0] = sizeof(double)
-        posP = numpy.asarray(_posP)
-
-        _zenith.strides[0] = sizeof(double)
-        zenith = numpy.asarray(_zenith)
-
-        elev = numpy.zeros(self.nobs)
-        tels = self.telescope
-
-        # TODO: make more Pythonic?
-        for ii in range(self.nobs):
-            obs = getObservatory(tels[ii])
-
-            _zenith = <double [:3]>self.psr[0].obsn[ii].zenith
-            zenith = numpy.asarray(_zenith)
-            elev[ii] = numpy.arcsin(numpy.dot(zenith, posP) / obs.height_grs80) * 180.0 / numpy.pi
-
-        return elev
-
 
     def __dealloc__(self):
         for i in range(self.npsr):
@@ -1740,9 +1711,6 @@ cdef class tempopulsar:
 
     def formresiduals(self,removemean=True):
         formResiduals(self.psr,self.npsr,1 if removemean else 0)
-
-    def get_obsCoord(self):
-        get_obsCoord(self.psr,self.npsr)
         
 
     # TO DO: proper dimensionfy as a table
@@ -2010,6 +1978,12 @@ cdef class tempopulsar:
             _pulseN.strides[0] = sizeof(observation)
 
             return numpy.asarray(_pulseN)
+
+    def add_par_to_fit(self, parname):
+        self.pardict[parname].fit = True
+
+    def remove_par_to_fit(self, parname):
+        self.pardict[parname].fit = False
 
     def pulsenumbers(self,updatebats=True,formresiduals=True,removemean=True):
         """Return the pulse number relative to PEPOCH, as detected by tempo2
