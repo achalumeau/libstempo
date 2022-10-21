@@ -1321,6 +1321,18 @@ cdef class tempopulsar:
         else:
             raise TypeError
 
+    def add_par_to_fit(self, parname):
+        self.pardict[parname].fit = True
+
+    def remove_par_to_fit(self, parname):
+        self.pardict[parname].fit = False
+
+    def add_par_to_set(self, parname):
+        self.pardict[parname].set = True
+
+    def remove_par_to_set(self, parname):
+        self.pardict[parname].set = False
+
     def _timeify(self,array):
         if self.units:
             if self.clock[:2] == 'TT':
@@ -1978,12 +1990,6 @@ cdef class tempopulsar:
             _pulseN.strides[0] = sizeof(observation)
 
             return numpy.asarray(_pulseN)
-
-    def add_par_to_fit(self, parname):
-        self.pardict[parname].fit = True
-
-    def remove_par_to_fit(self, parname):
-        self.pardict[parname].fit = False
 
     def pulsenumbers(self,updatebats=True,formresiduals=True,removemean=True):
         """Return the pulse number relative to PEPOCH, as detected by tempo2
