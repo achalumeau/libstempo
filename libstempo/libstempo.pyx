@@ -1232,8 +1232,6 @@ cdef class tempopulsar:
             return obs_coord
 
         def __set__(self, value):
-            print(value)
-            print(type(value))
             telname = value[0]
             x = value[1]
             y = value[2]
@@ -1242,9 +1240,9 @@ cdef class tempopulsar:
             if telname in tels:
                 obs = getObservatory(telname)
                 #stdio.sprintf(obs.x,"%s",<char *>value_bytes)
-                obs.x = x
-                obs.y = y
-                obs.z = z
+                # obs.x = x
+                # obs.y = y
+                # obs.z = z
             else:
                 raise ValueError("Telescope name '{}' not found.".format(telname))
 
