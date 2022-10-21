@@ -1223,7 +1223,7 @@ cdef class tempopulsar:
 
         def __get__(self):
             obs_coord = numpy.zeros((self.nobs, 3))
-            tels = self.telescope
+            tels = self.telescope()
             for ii in range(self.nobs):
                 obs = getObservatory(tels[ii])
                 obs_coord[ii, 0] = obs.x
