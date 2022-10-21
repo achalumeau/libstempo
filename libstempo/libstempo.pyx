@@ -1328,7 +1328,6 @@ cdef class tempopulsar:
         self.pardict[parname].fit = False
 
     def add_par_to_set(self, parname):
-        print(self.pardict)
         self.pardict[parname].set = True
 
     def remove_par_to_set(self, parname):
