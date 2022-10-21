@@ -1236,7 +1236,7 @@ cdef class tempopulsar:
             x = value[1]
             y = value[2]
             z = value[3]
-            tels = np.sort(np.unique(np.array(psr.telescope(), dtype=str) ))
+            tels = numpy.sort(numpy.unique(numpy.array(self.telescope(), dtype=str) ))
             if telname in tels:
                 obs = getObservatory(telname)
                 #stdio.sprintf(obs.x,"%s",<char *>value_bytes)
