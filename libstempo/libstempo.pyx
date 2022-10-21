@@ -1232,8 +1232,7 @@ cdef class tempopulsar:
             return obs_coord
 
         def __set__(self, value):
-            print(value_bytes)
-            print(type(value_bytes))
+            print(value)
             print(type(value))
             telname = value[0]
             x = value[1]
