@@ -738,16 +738,15 @@ cdef class tempopulsar:
         obs_y = numpy.zeros(self.nobs)
         obs_z = numpy.zeros(self.nobs)
         tels = self.telescope
-        for ii in range(self.nobs):
-            obs = getObservatory(tels[ii])
-            obs_x[ii] = obs.x
-            obs_x[ii] = obs.y
-            obs_x[ii] = obs.z
+        # for ii in range(self.nobs):
+        #     obs = getObservatory(tels[ii])
+        #     obs_x[ii] = obs.x
+        #     obs_x[ii] = obs.y
+        #     obs_x[ii] = obs.z
             
-
-        self.obs_x = obs_x
-        self.obs_y = obs_y
-        self.obs_z = obs_z
+        # self.obs_x = obs_x
+        # self.obs_y = obs_y
+        # self.obs_z = obs_z
 
         # do a fit if requested
         if dofit:
