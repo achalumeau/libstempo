@@ -720,7 +720,7 @@ cdef class tempopulsar:
         preProcess(self.psr,self.npsr,0,NULL)
         formBatsAll(self.psr,self.npsr)
 
-        self._get_obsCoord = get_obsCoord(self.psr,self.npsr)
+        get_obsCoord(self.psr,self.npsr)
 
         # create parameter proxies
 
