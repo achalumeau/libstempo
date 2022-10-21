@@ -1232,12 +1232,12 @@ cdef class tempopulsar:
             return obs_coord
 
         def __set__(self, value):
-            telname = value[0]
+            telname = value[0].encode('utf_8')
             x = value[1]
             y = value[2]
             z = value[3]
             tels = numpy.sort(numpy.unique(self.telescope() ))
-            if any([telname in str(i) for i in tels]):
+            if telname in tels:
                 obs = getObservatory(telname)
                 #stdio.sprintf(obs.x,"%s",<char *>value_bytes)
                 obs.x = x
