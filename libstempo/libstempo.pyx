@@ -733,24 +733,35 @@ cdef class tempopulsar:
         self._readpars(fixprefiterrors=fixprefiterrors)
         self._readflags()
 
-
-        obs_x = numpy.zeros(self.nobs)
-        obs_y = numpy.zeros(self.nobs)
-        obs_z = numpy.zeros(self.nobs)
-        tels = self.telescope
-        for ii in range(self.nobs):
-            obs = getObservatory(tels[ii])
-            obs_x[ii] = obs.x
-            obs_x[ii] = obs.y
-            obs_x[ii] = obs.z
-            
-        # self.obs_x = obs_x
-        # self.obs_y = obs_y
-        # self.obs_z = obs_z
-
         # do a fit if requested
         if dofit:
             self.fit()
+
+
+    def get_obsCoordinates(self):
+
+        cdef double [:] _posP = <double [:3]>self.psr[0].posPulsar
+        cdef double [:] _zenith = <double [:3]>self.psr[0].obsn[0].zenith
+
+        _posP.strides[0] = sizeof(double)
+        posP = numpy.asarray(_posP)
+
+        _zenith.strides[0] = sizeof(double)
+        zenith = numpy.asarray(_zenith)
+
+        elev = numpy.zeros(self.nobs)
+        tels = self.telescope
+
+        # TODO: make more Pythonic?
+        for ii in range(self.nobs):
+            obs = getObservatory(tels[ii])
+
+            _zenith = <double [:3]>self.psr[0].obsn[ii].zenith
+            zenith = numpy.asarray(_zenith)
+            elev[ii] = numpy.arcsin(numpy.dot(zenith, posP) / obs.height_grs80) * 180.0 / numpy.pi
+
+        return elev
+
 
     def __dealloc__(self):
         for i in range(self.npsr):
@@ -1198,6 +1209,28 @@ cdef class tempopulsar:
 
         def __get__(self):
             return string(self.psr[0].clock)
+
+        def __set__(self,value):
+            value_bytes = value.encode()
+
+            if len(value_bytes) < 16:
+                stdio.sprintf(self.psr[0].clock,"%s",<char *>value_bytes)
+            else:
+                raise ValueError("CLK name '{}' is too long.".format(value))
+
+    property tel_coords:
+        """Get or set clock file."""
+
+        def __get__(self):
+            obs_coord = numpy.zeros((self.nobs, 3))
+            tels = self.telescope
+            for ii in range(self.nobs):
+                obs = getObservatory(tels[ii])
+                obs_coord[ii, 0] = obs.x
+                obs_coord[ii, 1] = obs.y
+                obs_coord[ii, 2] = obs.z
+            
+            return obs_coord
 
         def __set__(self,value):
             value_bytes = value.encode()
