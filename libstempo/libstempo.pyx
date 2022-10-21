@@ -1231,7 +1231,7 @@ cdef class tempopulsar:
             
             return obs_coord
 
-        def __set__(self, telname, x, y, z):
+        def __set__(self, instance, value):
             tels = numpy.sort(numpy.unique(self.telescope()))
             # if telname in tels:
             #     obs = getObservatory(telname)
