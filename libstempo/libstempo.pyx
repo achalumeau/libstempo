@@ -1684,6 +1684,9 @@ cdef class tempopulsar:
     def formresiduals(self,removemean=True):
         formResiduals(self.psr,self.npsr,1 if removemean else 0)
 
+    def get_obsCoordformbats(self):
+        return get_obsCoord(self.psr,self.npsr)
+
     # TO DO: proper dimensionfy as a table
     def designmatrix(self,updatebats=True,fixunits=True,fixsigns=True,incoffset=True):
         """tempopulsar.designmatrix(updatebats=True,fixunits=True,incoffset=True)
