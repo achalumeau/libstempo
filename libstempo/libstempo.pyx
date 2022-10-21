@@ -1232,9 +1232,9 @@ cdef class tempopulsar:
             return obs_coord
 
         def __set__(self, value):
-            value_bytes = value.encode()
             print(value_bytes)
-            print(value)
+            print(type(value_bytes))
+            print(type(value))
             telname = value[0]
             x = value[1]
             y = value[2]
