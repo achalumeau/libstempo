@@ -153,9 +153,9 @@ cdef extern from "tempo2.h":
 
     ctypedef struct observation:
         long double sat        # site arrival time
-        long double origsat	   # Backup of SAT
-        long double sat_day	   # Just the Day part
-        long double sat_sec	   # Just the Sec part
+        long double origsat    # Backup of SAT
+        long double sat_day    # Just the Day part
+        long double sat_sec    # Just the Sec part
         long double bat        # barycentric arrival time
         long double bbat       # barycentric arrival time
         long double batCorr    #update from sat-> bat
@@ -307,6 +307,7 @@ cdef extern from "tempo2.h":
     void formBatsAll(pulsar *psr,int npsr)
     void updateBatsAll(pulsar *psr,int npsr)                    # what's the difference?
     void formResiduals(pulsar *psr,int npsr,int removeMean)
+    void get_obsCoord(pulsar *psr,int npsr)
 
     # void doFit(pulsar *psr,int npsr,int writeModel) --- obsoleted
     # void doFitAll(pulsar *psr,int npsr, const char *covarFuncFile) --- obsoleted
@@ -718,6 +719,8 @@ cdef class tempopulsar:
 
         preProcess(self.psr,self.npsr,0,NULL)
         formBatsAll(self.psr,self.npsr)
+
+        self._get_obsCoord = get_obsCoord(self.psr,self.npsr)
 
         # create parameter proxies
 
@@ -1490,7 +1493,7 @@ cdef class tempopulsar:
         return self._dimensionfy(numpy.asarray(_origSats),u.s) if self.units else numpy.asarray(_origSats)
 
 
-	# --- day part of the SAT
+    # --- day part of the SAT
     def satDay(self):
         """tempopulsar.satDay()
 
