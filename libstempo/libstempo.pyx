@@ -723,10 +723,7 @@ cdef class tempopulsar:
         preProcess(self.psr,self.npsr,0,NULL)
         formBatsAll(self.psr,self.npsr)
 
-        get_obsCoord(self.psr,self.npsr)
-        self.obs.x = obs.x
-        self.obs.y = obs.y
-        self.obs.z = obs.z
+        #get_obsCoord(self.psr,self.npsr)
 
         # create parameter proxies
 
@@ -736,9 +733,49 @@ cdef class tempopulsar:
         self._readpars(fixprefiterrors=fixprefiterrors)
         self._readflags()
 
+
+        obs_x = numpy.zeros(self.nobs)
+        obs_y = numpy.zeros(self.nobs)
+        obs_z = numpy.zeros(self.nobs)
+        tels = self.telescope
+        for ii in range(self.nobs):
+            obs = getObservatory(tels[ii])
+            obs_x[ii] = obs.x
+            obs_x[ii] = obs.y
+            obs_x[ii] = obs.z
+            
+
+        self.obs_x = obs_x
+        self.obs_y = obs_y
+        self.obs_z = obs_z
+
         # do a fit if requested
         if dofit:
             self.fit()
+
+    def get_obsCoordinates(self):
+
+        cdef double [:] _posP = <double [:3]>self.psr[0].posPulsar
+        cdef double [:] _zenith = <double [:3]>self.psr[0].obsn[0].zenith
+
+        _posP.strides[0] = sizeof(double)
+        posP = numpy.asarray(_posP)
+
+        _zenith.strides[0] = sizeof(double)
+        zenith = numpy.asarray(_zenith)
+
+        elev = numpy.zeros(self.nobs)
+        tels = self.telescope
+
+        # TODO: make more Pythonic?
+        for ii in range(self.nobs):
+            obs = getObservatory(tels[ii])
+
+            _zenith = <double [:3]>self.psr[0].obsn[ii].zenith
+            zenith = numpy.asarray(_zenith)
+            elev[ii] = numpy.arcsin(numpy.dot(zenith, posP) / obs.height_grs80) * 180.0 / numpy.pi
+
+        return elev
 
     def __dealloc__(self):
         for i in range(self.npsr):
