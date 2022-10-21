@@ -1222,13 +1222,12 @@ cdef class tempopulsar:
         """Get or set clock file."""
 
         def __get__(self):
-            obs_coord = numpy.zeros((self.nobs, 3))
-            tels = self.telescope()
-            for ii in range(self.nobs):
+            tels = numpy.sort(numpy.unique(self.telescope()))
+            obs_coord = {}
+            
+            for ii in range(tels):
                 obs = getObservatory(tels[ii])
-                obs_coord[ii, 0] = obs.x
-                obs_coord[ii, 1] = obs.y
-                obs_coord[ii, 2] = obs.z
+                obs_coord[tels[ii]] = [obs.x, obs.y, obs.z]
             
             return obs_coord
 
