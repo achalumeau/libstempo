@@ -1231,16 +1231,20 @@ cdef class tempopulsar:
             
             return obs_coord
 
-        def __set__(self, instance):
+        def __set__(self, value):
+            telname = value[0]
+            x = value[1]
+            y = value[2]
+            z = value[3]
             tels = numpy.sort(numpy.unique(self.telescope()))
-            # if telname in tels:
-            #     obs = getObservatory(telname)
-            #     #stdio.sprintf(obs.x,"%s",<char *>value_bytes)
-            #     obs.x = x
-            #     obs.y = y
-            #     obs.z = z
-            # else:
-            #     raise ValueError("Telescope name '{}' not found.".format(telname))
+            if telname in tels:
+                obs = getObservatory(telname)
+                #stdio.sprintf(obs.x,"%s",<char *>value_bytes)
+                obs.x = x
+                obs.y = y
+                obs.z = z
+            else:
+                raise ValueError("Telescope name '{}' not found.".format(telname))
 
 
     excludepars = ['START','FINISH']
