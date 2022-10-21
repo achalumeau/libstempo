@@ -1225,7 +1225,7 @@ cdef class tempopulsar:
             tels = numpy.sort(numpy.unique(self.telescope()))
             obs_coord = {}
             
-            for ii in range(tels):
+            for ii in range(len(tels)):
                 obs = getObservatory(tels[ii])
                 obs_coord[tels[ii]] = [obs.x, obs.y, obs.z]
             
