@@ -1190,7 +1190,7 @@ cdef class tempopulsar:
                 raise ValueError("CLK name '{}' is too long.".format(value))
 
     property tel_coords:
-        """Get or set clock file."""
+        """Get or set telescope coordinates."""
 
         def __get__(self):
             tels = numpy.sort(numpy.unique(self.telescope()))
