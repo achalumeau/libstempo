@@ -1200,7 +1200,7 @@ cdef class tempopulsar:
             
             for ii in range(len(tels)):
                 obs = getObservatory(tels[ii])
-                obs_coord[tels[ii].encode('utf_8')] = [obs.x, obs.y, obs.z]
+                obs_coord[str(tels[ii])] = [obs.x, obs.y, obs.z]
             
             return obs_coord
 
