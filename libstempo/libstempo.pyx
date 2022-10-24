@@ -1190,7 +1190,9 @@ cdef class tempopulsar:
                 raise ValueError("CLK name '{}' is too long.".format(value))
 
     property tel_coords:
-        """Get or set telescope coordinates."""
+        """Get or set telescope coordinates.
+        Give [telescope name, x, y, y] to set the new position
+        """
 
         def __get__(self):
             tels = numpy.sort(numpy.unique(self.telescope()))
@@ -1204,16 +1206,12 @@ cdef class tempopulsar:
 
         def __set__(self, value):
             telname = value[0].encode('utf_8')
-            x = value[1]
-            y = value[2]
-            z = value[3]
             tels = numpy.sort(numpy.unique(self.telescope() ))
             if telname in tels:
                 obs = getObservatory(telname)
-                #stdio.sprintf(obs.x,"%s",<char *>value_bytes)
-                obs.x = x
-                obs.y = y
-                obs.z = z
+                obs.x = value[1]
+                obs.y = value[2]
+                obs.z = value[3]
             else:
                 raise ValueError("Telescope name '{}' not found.".format(telname))
 
