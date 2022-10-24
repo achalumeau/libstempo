@@ -1320,16 +1320,24 @@ cdef class tempopulsar:
             raise TypeError
 
     def add_par_to_fit(self, parname):
-        self.pardict[parname].fit = True
+        pars = np.atleast_1d(parname):
+        for par in pars:
+            self.pardict[par].fit = True
 
     def remove_par_to_fit(self, parname):
-        self.pardict[parname].fit = False
+        pars = np.atleast_1d(parname):
+        for par in pars:
+            self.pardict[par].fit = False
 
     def add_par_to_set(self, parname):
-        self.pardict[parname].set = True
+        pars = np.atleast_1d(parname):
+        for par in pars:
+            self.pardict[par].set = True
 
     def remove_par_to_set(self, parname):
-        self.pardict[parname].set = False
+        pars = np.atleast_1d(parname):
+        for par in pars:
+            self.pardict[par].set = False
 
     def _timeify(self,array):
         if self.units:
